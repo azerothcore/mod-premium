@@ -7,53 +7,53 @@
 #include "Spell.h"
 #include "Configuration/Config.h"
 
-enum vendor
+enum Vendors
 {
-    NPC_VENDOR = 54, //Alliance
-    NPC_VENDOR2 = 3163, //Horde
-    NPC_AUCTION = 9856, //Horde
-    NPC_AUCTION2 = 8670 //Alliance
+    NPC_VENDOR_A    = 54,
+    NPC_VENDOR_H    = 3163,
+    NPC_AUCTION_H   = 9856,
+    NPC_AUCTION_A   = 8670
 };
 
-enum trainers
+enum Trainers
 {
-    //Alliance NPC's
-    AROGUE = 918,
-    AWARRIOR = 5479,
-    AHUNTER = 5515,
-    APRIEST = 376,
-    APALADIN = 928,
-    ADRUID = 5504,
-    ASHAMAN = 20407,
-    AMAGE = 5497,
-    AWARLOCK = 461,
+    // Alliance
+    DRUID_A     = 5504,
+    HUNTER_A    = 5515,
+    MAGE_A      = 5497,
+    PALADIN_A   = 928,
+    PRIEST_A    = 376,
+    ROGUE_A     = 918,
+    SHAMAN_A    = 20407,
+    WARLOCK_A   = 461,
+    WARRIOR_A   = 5479,
 
-    //Horde NPCS
-    HHUNTER = 3406,
-    HWARRIOR = 3354,
-    HSHAMAN = 3344,
-    HPALADIN = 23128,
-    HROGUE = 3401,
-    HWARLOCK = 3324,
-    HMAGE = 5883, 
-    HPRIEST = 3045,
-    HDRUID = 3033,
+    // Horde
+    DRUID_H     = 3033,
+    HUNTER_H    = 3406,
+    MAGE_H      = 5883,
+    PALADIN_H   = 23128,
+    PRIEST_H    = 3045,
+    ROGUE_H     = 3401,
+    SHAMAN_H    = 3344,
+    WARLOCK_H   = 3324,
+    WARRIOR_H   = 3354, 
 
-    DKTRAINER = 28472
+    DEATHKNIGHT_AH  = 28472
 };
 
-enum mounts
+enum Mounts
 {
-    HUMAN_MOUNT = 470,
-    ORC_MOUNT = 6653,
-    GNOME_MOUNT = 17454,
-    NIGHTELF_MOUNT = 8394,
-    DWARF_MOUNT = 6899,
-    UNEAD_MOUNT = 17463,
-    TAUREN_MOUNT = 64657,
-    TROLL_MOUNT = 8395,
-    BLOODELF_MOUNT = 35022,
-    DRAENEI_MOUNT = 34406
+    HUMAN_MOUNT     = 470,
+    ORC_MOUNT       = 6653,
+    GNOME_MOUNT     = 17454,
+    NIGHTELF_MOUNT  = 8394,
+    DWARF_MOUNT     = 6899,
+    UNEAD_MOUNT     = 17463,
+    TAUREN_MOUNT    = 64657,
+    TROLL_MOUNT     = 8395,
+    BLOODELF_MOUNT  = 35022,
+    DRAENEI_MOUNT   = 34406
 };
 
 class premium_account : public ItemScript
@@ -61,12 +61,12 @@ class premium_account : public ItemScript
 public:
     premium_account() : ItemScript("premium_account") { }
 
-    bool OnUse(Player* player, Item* item, SpellCastTargets const& /*targets*/) override // Any hook here
+    bool OnUse(Player* player, Item* item, SpellCastTargets const& /*targets*/) override
     {
         if (!sConfigMgr->GetBoolDefault("PremiumAccount", true)) 
             return false;  
 
-        QueryResult result = CharacterDatabase.PQuery("SELECT AccountId FROM premium WHERE active = 1 and AccountId = %u", player->GetSession()->GetAccountId());
+        QueryResult result = CharacterDatabase.PQuery("SELECT AccountId FROM premium WHERE active = 1 AND AccountId = %u", player->GetSession()->GetAccountId());
 
         if (!result)
             return false;
@@ -74,29 +74,30 @@ public:
         if (player->IsInCombat())
             return false;
 
-        if (player->FindNearestCreature(NPC_AUCTION2, 10.0f) ||
-            player->FindNearestCreature(NPC_AUCTION, 10.0f) ||
-            player->FindNearestCreature(NPC_VENDOR, 10.0f) ||
-            player->FindNearestCreature(NPC_VENDOR2, 10.0f) ||
-            player->FindNearestCreature(AROGUE, 10.0f) ||
-            player->FindNearestCreature(AWARRIOR, 10.0f) ||
-            player->FindNearestCreature(AHUNTER, 10.0f) ||
-            player->FindNearestCreature(APRIEST, 10.0f) ||
-            player->FindNearestCreature(APALADIN, 10.0f) ||
-            player->FindNearestCreature(ADRUID, 10.0f) ||
-            player->FindNearestCreature(ASHAMAN, 10.0f) ||
-            player->FindNearestCreature(AMAGE, 10.0f) ||
-            player->FindNearestCreature(AWARLOCK, 10.0f) ||
-            player->FindNearestCreature(HHUNTER, 10.0f) ||
-            player->FindNearestCreature(HWARRIOR, 10.0f) ||
-            player->FindNearestCreature(HSHAMAN, 10.0f) ||
-            player->FindNearestCreature(HPALADIN, 10.0f) ||
-            player->FindNearestCreature(HROGUE, 10.0f) ||
-            player->FindNearestCreature(HWARLOCK, 10.0f) ||
-            player->FindNearestCreature(HMAGE, 10.0f) ||
-            player->FindNearestCreature(HPRIEST, 10.0f) ||
-            player->FindNearestCreature(HDRUID, 10.0f) ||
-            player->FindNearestCreature(DKTRAINER, 10.0f))
+        float rangeCheck = 10.0f;
+        if (player->FindNearestCreature(NPC_AUCTION_A, rangeCheck) ||
+            player->FindNearestCreature(NPC_AUCTION_H, rangeCheck) ||
+            player->FindNearestCreature(NPC_VENDOR_A, rangeCheck) ||
+            player->FindNearestCreature(NPC_VENDOR_H, rangeCheck) ||
+            player->FindNearestCreature(ROGUE_A, rangeCheck) ||
+            player->FindNearestCreature(WARRIOR_A, rangeCheck) ||
+            player->FindNearestCreature(HUNTER_A, rangeCheck) ||
+            player->FindNearestCreature(PRIEST_A, rangeCheck) ||
+            player->FindNearestCreature(PALADIN_A, rangeCheck) ||
+            player->FindNearestCreature(DRUID_A, rangeCheck) ||
+            player->FindNearestCreature(SHAMAN_A, rangeCheck) ||
+            player->FindNearestCreature(MAGE_A, rangeCheck) ||
+            player->FindNearestCreature(WARLOCK_A, rangeCheck) ||
+            player->FindNearestCreature(HUNTER_H, rangeCheck) ||
+            player->FindNearestCreature(WARRIOR_H, rangeCheck) ||
+            player->FindNearestCreature(SHAMAN_H, rangeCheck) ||
+            player->FindNearestCreature(PALADIN_H, rangeCheck) ||
+            player->FindNearestCreature(ROGUE_H, rangeCheck) ||
+            player->FindNearestCreature(WARLOCK_H, rangeCheck) ||
+            player->FindNearestCreature(MAGE_H, rangeCheck) ||
+            player->FindNearestCreature(PRIEST_H, rangeCheck) ||
+            player->FindNearestCreature(DRUID_H, rangeCheck) ||
+            player->FindNearestCreature(DEATHKNIGHT_AH, rangeCheck))
             return false;
 
         player->PlayerTalkClass->ClearMenus();
@@ -106,10 +107,13 @@ public:
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Morph", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Demorph", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
         }
+
         if (sConfigMgr->GetBoolDefault("Mount", true))
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT_16, "Mount", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+
         if (sConfigMgr->GetBoolDefault("Trainers", true))
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+
         if (sConfigMgr->GetBoolDefault("PlayerInteraction", true))
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Player interactions", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
 
@@ -120,17 +124,153 @@ public:
 
     void OnGossipSelect(Player* player, Item* item, uint32 /*sender*/, uint32 action)
     {
-        int npcDuration = sConfigMgr->GetIntDefault("Premium.NpcDuration", 60) * IN_MILLISECONDS;
-
         switch (action)
         {
-        case GOSSIP_ACTION_INFO_DEF + 1: /*Morph*/
-        {
-            player->CLOSE_GOSSIP_MENU();
-            uint32 random = (urand(1, 26)); /* change this line when adding more morphs */
+            case GOSSIP_ACTION_INFO_DEF + 1: /*Morph*/
             {
-                switch (random)
+                player->CLOSE_GOSSIP_MENU();
+                ApplyRandomMorph(player);
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 2: /*Demorph*/
+            {
+                player->DeMorph();
+                player->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 3: /*Show Bank*/
+            {
+                player->GetSession()->SendShowBank(player->GetGUID());
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 4: /*Mail Box*/
+            {
+                player->GetSession()->SendShowMailBox(player->GetGUID());
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 5: /*Vendor*/
+            {
+                uint32 vendorId = 0;
+                std::string salute;
+                if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
+                    vendorId = NPC_VENDOR_A;
+                    salute = "Greetings";
+                } else {
+                    vendorId = NPC_VENDOR_H;
+                    salute = "Zug zug";
+                }
+
+                SummonTempNPC(player, vendorId, salute.c_str());
+                player->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 6: /*Mount*/
+            {
+                player->CLOSE_GOSSIP_MENU();
+                switch (player->getRace())
+                {
+                    case RACE_HUMAN:         player->CastSpell(player, HUMAN_MOUNT); break;
+                    case RACE_ORC:           player->CastSpell(player, ORC_MOUNT); break;
+                    case RACE_GNOME:         player->CastSpell(player, GNOME_MOUNT); break;
+                    case RACE_NIGHTELF:      player->CastSpell(player, NIGHTELF_MOUNT); break;
+                    case RACE_DWARF:         player->CastSpell(player, DWARF_MOUNT); break;
+                    case RACE_DRAENEI:       player->CastSpell(player, DRAENEI_MOUNT); break;
+                    case RACE_UNDEAD_PLAYER: player->CastSpell(player, UNEAD_MOUNT); break;
+                    case RACE_TAUREN:        player->CastSpell(player, TAUREN_MOUNT); break;
+                    case RACE_TROLL:         player->CastSpell(player, TROLL_MOUNT); break;
+                    case RACE_BLOODELF:      player->CastSpell(player, BLOODELF_MOUNT); break;
+                }
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 7: /*Auction House*/
+            {
+                uint32 auctionId = 0;
+                std::string salute;
+                if (player->GetTeamId() == TEAM_HORDE)
+                {
+                    auctionId = NPC_AUCTION_H;
+                    salute = "I will go shortly, I need to get back to Orgrimmar";
+                }
+                else
+                {
+                    auctionId = NPC_AUCTION_A;
+                    salute = "I will go shortly, I need to get back to Stormwind City";
+                }
+
+                SummonTempNPC(player, auctionId, salute.c_str());
+                player->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 8: /* Class Trainers*/
+            {
+                uint32 trainerId = 0;
+                switch (player->getClass())
+                {
+                    case CLASS_ROGUE:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? ROGUE_A : ROGUE_H;
+                        break;
+                    case CLASS_WARRIOR:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? WARRIOR_A : WARRIOR_H;
+                        break;
+                    case CLASS_PRIEST:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? PRIEST_A : PRIEST_H;
+                        break;
+                    case CLASS_MAGE:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? MAGE_A : MAGE_H;
+                        break;
+                    case CLASS_PALADIN:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? PALADIN_A : PALADIN_H;
+                        break;
+                    case CLASS_HUNTER:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? HUNTER_A : HUNTER_H;
+                        break;
+                    case CLASS_DRUID:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? DRUID_A : DRUID_H;
+                        break;
+                    case CLASS_SHAMAN:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? SHAMAN_A : SHAMAN_H;
+                        break;
+                    case CLASS_WARLOCK:
+                        trainerId = player->GetTeamId() == TEAM_ALLIANCE ? WARLOCK_A : WARLOCK_H;
+                        break;
+                    case CLASS_DEATH_KNIGHT:
+                        trainerId = DEATHKNIGHT_AH;
+                        break;
+                }
+
+                SummonTempNPC(player, trainerId);
+                player->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 9: /*Player Interactions*/
+            {
+                player->PlayerTalkClass->ClearMenus();
+
+                if (sConfigMgr->GetBoolDefault("Vendor", true))
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Vendor", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+
+                if (sConfigMgr->GetBoolDefault("MailBox", true))
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Mail Box", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+
+                if (sConfigMgr->GetBoolDefault("Bank", true))
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Show Bank", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+
+                if (sConfigMgr->GetBoolDefault("Auction", true))
+                    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Auction House", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+
+                player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, item->GetGUID());
+                break;
+            }
+        }
+    }
+
+    void ApplyRandomMorph(Player* player)
+    {
+        uint32 random = (urand(1, 26)); // Change this line when adding more morphs
+        {
+            switch (random)
+            {
                 case 1: player->SetDisplayId(10134); break;     // Troll Female                 'Orb of Deception'
                 case 2: player->SetDisplayId(10135); break;     // Troll Male                   'Orb of Deception'
                 case 3: player->SetDisplayId(10136); break;     // Tauren Male                  'Orb of Deception'
@@ -160,267 +300,26 @@ public:
 
                 default:
                     break;
-                }
             }
-            break;
         }
-        case GOSSIP_ACTION_INFO_DEF + 2: /*Demorph*/
-            player->DeMorph();
-            player->CLOSE_GOSSIP_MENU();
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3: /*Show Bank*/
-            player->GetSession()->SendShowBank(player->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 4: /*Mail Box*/
-            player->GetSession()->SendShowMailBox(player->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 5: /*Vendor*/
-            if (player->GetTeamId() == TEAM_ALLIANCE)
-            {
-                Creature* vendor = player->SummonCreature(NPC_VENDOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                vendor->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                vendor->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                vendor->setFaction(player->getFaction());
-                vendor->MonsterWhisper("Greetings", player, false);
-                player->CLOSE_GOSSIP_MENU();
-            }
-            else
-            {
-                Creature* vendor = player->SummonCreature(NPC_VENDOR2, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                vendor->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                vendor->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                vendor->setFaction(player->getFaction());
-                vendor->MonsterWhisper("Zug Zug", player, false);
-                player->CLOSE_GOSSIP_MENU();
-            }
-        break;
-        case GOSSIP_ACTION_INFO_DEF + 6: /*Mount*/
-            player->CLOSE_GOSSIP_MENU();
-            switch (player->getRace())
-            {
-            case RACE_HUMAN:
-                player->CastSpell(player, HUMAN_MOUNT);
-                break;
-            case RACE_ORC:
-                player->CastSpell(player, ORC_MOUNT);
-                break;
-            case RACE_GNOME:
-                player->CastSpell(player, GNOME_MOUNT);
-                break;
-            case RACE_NIGHTELF:
-                player->CastSpell(player, NIGHTELF_MOUNT);
-                break;
-            case RACE_DWARF:
-                player->CastSpell(player, DWARF_MOUNT);
-                break;
-            case RACE_DRAENEI:
-                player->CastSpell(player, DRAENEI_MOUNT);
-                break;
-            case RACE_UNDEAD_PLAYER:
-                player->CastSpell(player, UNEAD_MOUNT);
-                break;
-            case RACE_TAUREN:
-                player->CastSpell(player, TAUREN_MOUNT);
-                break;
-            case RACE_TROLL:
-                player->CastSpell(player, TROLL_MOUNT);
-                break;
-            case RACE_BLOODELF:
-                player->CastSpell(player, BLOODELF_MOUNT);
-                break;
-            }
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 7: /*Auction House*/
+    }
 
-            if (player->GetTeamId() == TEAM_HORDE)
-            {
-                Creature* npc_auction = player->SummonCreature(NPC_AUCTION, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                npc_auction->MonsterWhisper("I will go shortly, i need to get back to Orgrimmar", player, false);
-                npc_auction->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                npc_auction->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                npc_auction->setFaction(player->getFaction());
-            }
-            else
-            {
-                Creature* npc_auction = player->SummonCreature(NPC_AUCTION2, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                npc_auction->MonsterWhisper("I will go shortly, i need to get back to Stormwind City", player, false);
-                npc_auction->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                npc_auction->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                npc_auction->setFaction(player->getFaction());
-            }
-            player->CLOSE_GOSSIP_MENU();
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 8: /* Class Trainers*/
-            switch (player->getClass())
-            {
-            case CLASS_ROGUE:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(AROGUE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HROGUE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_WARRIOR:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(AWARRIOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HWARRIOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_PRIEST:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(APRIEST, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HPRIEST, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_MAGE:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(AMAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HMAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_PALADIN:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(APALADIN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HPALADIN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_HUNTER:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(AHUNTER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HHUNTER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_DRUID:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(ADRUID, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HDRUID, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_SHAMAN:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(ASHAMAN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HSHAMAN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_WARLOCK:
-                if (player->GetTeamId() == TEAM_ALLIANCE)
-                {
-                    Creature* trainer = player->SummonCreature(AWARLOCK, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                else
-                {
-                    Creature* trainer = player->SummonCreature(HWARLOCK, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                    trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                    trainer->setFaction(player->getFaction());
-                }
-                break;
-            case CLASS_DEATH_KNIGHT:
-                Creature* trainer = player->SummonCreature(DKTRAINER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
-                trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
-                trainer->setFaction(player->getFaction());
-                break;
-            }
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 9: /*Player Interactions*/
-        {
-            player->PlayerTalkClass->ClearMenus();
-            if (sConfigMgr->GetBoolDefault("Vendor", true))
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Vendor", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            if (sConfigMgr->GetBoolDefault("MailBox", true))
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Mail Box", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            if (sConfigMgr->GetBoolDefault("Bank", true))
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Show Bank", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            if (sConfigMgr->GetBoolDefault("Auction", true))
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, "Auction House", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, item->GetGUID());
-            break;
-        }
-        break;
-        }
+    void SummonTempNPC(Player* player, uint32 entry, const char* salute = '\0')
+    {
+        if (!player || entry == 0)
+            return;
+
+        int npcDuration = sConfigMgr->GetIntDefault("Premium.NpcDuration", 60) * IN_MILLISECONDS;
+        if (npcDuration <= 0) // Safeguard
+            npcDuration = 60;
+
+        Creature* npc = player->SummonCreature(entry, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
+        npc->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        npc->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
+        npc->setFaction(player->getFaction());
+
+        if (salute && !salute[0] == '\0')
+            npc->MonsterWhisper(salute, player, false);
     }
 };
 
@@ -437,7 +336,6 @@ public:
             std::string cfg_def_file = cfg_file + ".dist";
 
             sConfigMgr->LoadMore(cfg_def_file.c_str());
-
             sConfigMgr->LoadMore(cfg_file.c_str());
         }
     }
