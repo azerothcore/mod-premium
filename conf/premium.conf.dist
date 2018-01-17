@@ -1,5 +1,6 @@
 [worldserver]
 
+################################################################################################################
 #
 #    PremiumAccount
 #        Description: Enable PremiumAccount for players
@@ -25,7 +26,7 @@ Mount = 1
 #                     0  - (Disabled)
 Trainers = 1
 
-##################################################################################################################
+#################################################################################################################
 #    PlayerInteraction
 #        Description: This enables the submenu for the below
 #        Default:     1  - (Enabled)
@@ -54,3 +55,9 @@ Vendor = 1
 #        Default:     1  - (Enabled)
 #                     0  - (Disabled)
 MailBox = 1
+
+##################################################################################################################
+#   Premium.NpcDuration
+#       Description: Time (in seconds) before despawn of summoned NPC
+#       Default:    60 - (Seconds)
+Premium.NpcDuration = 60

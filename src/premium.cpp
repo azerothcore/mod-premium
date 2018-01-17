@@ -107,11 +107,12 @@ public:
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Demorph", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
         }
         if (sConfigMgr->GetBoolDefault("Mount", true))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT_16, "Mount", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT_16, "Mount", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
         if (sConfigMgr->GetBoolDefault("Trainers", true))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
         if (sConfigMgr->GetBoolDefault("PlayerInteraction", true))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Player interactions", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Player interactions", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+
         player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, item->GetGUID());
 
         return false; // Cast the spell on use normally
@@ -119,6 +120,8 @@ public:
 
     void OnGossipSelect(Player* player, Item* item, uint32 /*sender*/, uint32 action)
     {
+        int npcDuration = sConfigMgr->GetIntDefault("Premium.NpcDuration", 60) * IN_MILLISECONDS;
+
         switch (action)
         {
         case GOSSIP_ACTION_INFO_DEF + 1: /*Morph*/
@@ -174,7 +177,7 @@ public:
         case GOSSIP_ACTION_INFO_DEF + 5: /*Vendor*/
             if (player->GetTeamId() == TEAM_ALLIANCE)
             {
-                Creature* vendor = player->SummonCreature(NPC_VENDOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                Creature* vendor = player->SummonCreature(NPC_VENDOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                 vendor->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 vendor->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                 vendor->setFaction(player->getFaction());
@@ -183,7 +186,7 @@ public:
             }
             else
             {
-                Creature* vendor = player->SummonCreature(NPC_VENDOR2, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                Creature* vendor = player->SummonCreature(NPC_VENDOR2, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                 vendor->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 vendor->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                 vendor->setFaction(player->getFaction());
@@ -231,7 +234,7 @@ public:
 
             if (player->GetTeamId() == TEAM_HORDE)
             {
-                Creature* npc_auction = player->SummonCreature(NPC_AUCTION, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                Creature* npc_auction = player->SummonCreature(NPC_AUCTION, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                 npc_auction->MonsterWhisper("I will go shortly, i need to get back to Orgrimmar", player, false);
                 npc_auction->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 npc_auction->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
@@ -239,7 +242,7 @@ public:
             }
             else
             {
-                Creature* npc_auction = player->SummonCreature(NPC_AUCTION2, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                Creature* npc_auction = player->SummonCreature(NPC_AUCTION2, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                 npc_auction->MonsterWhisper("I will go shortly, i need to get back to Stormwind City", player, false);
                 npc_auction->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 npc_auction->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
@@ -253,14 +256,14 @@ public:
             case CLASS_ROGUE:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(AROGUE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(AROGUE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HROGUE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HROGUE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -269,14 +272,14 @@ public:
             case CLASS_WARRIOR:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(AWARRIOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(AWARRIOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HWARRIOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HWARRIOR, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -285,14 +288,14 @@ public:
             case CLASS_PRIEST:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(APRIEST, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(APRIEST, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HPRIEST, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HPRIEST, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -301,14 +304,14 @@ public:
             case CLASS_MAGE:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(AMAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(AMAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HMAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HMAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -317,14 +320,14 @@ public:
             case CLASS_PALADIN:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(APALADIN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(APALADIN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HPALADIN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HPALADIN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -333,14 +336,14 @@ public:
             case CLASS_HUNTER:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(AHUNTER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(AHUNTER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HHUNTER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HHUNTER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -349,14 +352,14 @@ public:
             case CLASS_DRUID:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(ADRUID, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(ADRUID, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HDRUID, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HDRUID, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -365,14 +368,14 @@ public:
             case CLASS_SHAMAN:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(ASHAMAN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(ASHAMAN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HSHAMAN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HSHAMAN, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
@@ -381,21 +384,21 @@ public:
             case CLASS_WARLOCK:
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
-                    Creature* trainer = player->SummonCreature(AWARLOCK, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(AWARLOCK, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 else
                 {
-                    Creature* trainer = player->SummonCreature(HWARLOCK, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                    Creature* trainer = player->SummonCreature(HWARLOCK, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                     trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                     trainer->setFaction(player->getFaction());
                 }
                 break;
             case CLASS_DEATH_KNIGHT:
-                Creature* trainer = player->SummonCreature(DKTRAINER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                Creature* trainer = player->SummonCreature(DKTRAINER, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, npcDuration);
                 trainer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 trainer->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
                 trainer->setFaction(player->getFaction());
