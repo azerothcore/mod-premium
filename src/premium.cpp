@@ -318,7 +318,7 @@ public:
         npc->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, player->GetFollowAngle());
         npc->setFaction(player->getFaction());
 
-        if (salute && !salute[0] == '\0')
+        if (salute && !(salute[0] == '\0'))
             npc->MonsterWhisper(salute, player, false);
     }
 };
