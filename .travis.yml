@@ -45,7 +45,7 @@ jobs:
       install:
         - source ./apps/ci/ci-install.sh ON
         - source ./apps/ci/ci-import-db.sh
-        - mysql -u root -p$DB_RND_NAME world_$DB_RND_NAME <modules/$(basename "$TRAVIS_BUILD_DIR")/sql/example_item_9017.sql
+        - mysql -u root world_$DB_RND_NAME <modules/$(basename "$TRAVIS_BUILD_DIR")/sql/example_item_9017.sql
       script:
         - source ./apps/ci/ci-compile.sh
         - source ./apps/ci/ci-worldserver-dry-run.sh
