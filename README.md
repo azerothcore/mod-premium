@@ -1,6 +1,6 @@
 # Premium Account
 
-- Latest Premium Account build status with azerothcore: [![Build Status](https://travis-ci.org/azerothcore/mod-duelreset.svg?branch=master)](https://travis-ci.org/azerothcore/mod-duelreset)
+- Latest Premium Account build status with azerothcore: [![Build Status](https://travis-ci.org/azerothcore/mod-premium.svg?branch=master)](https://travis-ci.org/azerothcore/mod-premium)
 
 This is a module for [AzerothCore](http://www.azerothcore.org) that adds Premium account features to players.
 
