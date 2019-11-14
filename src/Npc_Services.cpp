@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "ScriptedGossip.h"
+#include "InstanceSaveMgr.h"
+#include "InstanceScript.h"
 
 class Npc_Services : public CreatureScript
 {
@@ -54,8 +56,8 @@ public:
                         InstanceSave* save = itr->second.save;
                         if (itr->first != player->GetMapId())
                         {
-                           // uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
-                           // uint32 ttr = (resetTime >= time(nullptr) ? resetTime - time(nullptr) : 0);
+                            uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
+                            uint32 ttr = (resetTime >= time(nullptr) ? resetTime - time(nullptr) : 0);
                             sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUIDLow(), itr->first, Difficulty(i), true, player);
                             itr = m_boundInstances.begin();
                         }
