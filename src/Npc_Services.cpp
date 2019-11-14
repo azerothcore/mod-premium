@@ -11,7 +11,7 @@ public:
         {
 		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\Spell_Nature_Regenerate:40:40:-18|t Restore HP and MP", GOSSIP_SENDER_MAIN, 1);			// Restore Health and Mana
 		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\Achievement_BG_winAB_underXminutes:40:40:-18|t Reset Instances", GOSSIP_SENDER_MAIN, 2);	// Reset Instances
-		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\SPELL_HOLY_BORROWEDTIME:40:40:-18|t Reset Cooldowns", GOSSIP_SENDER_MAIN, 3);				// Reset Cooldowns
+		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\SPELL_HOLY_BORROWEDTIME:40:40:-18|t Reset Cool-downs", GOSSIP_SENDER_MAIN, 3);				// Reset Cooldowns
 		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\Achievement_BG_AB_defendflags:40:40:-18|t Reset Combat", GOSSIP_SENDER_MAIN, 4);			// Leave Combat
 		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\Spell_Shadow_DeathScream:40:40:-18|t Remove Sickness", GOSSIP_SENDER_MAIN, 5);				// Remove Sickness
 		player->ADD_GOSSIP_ITEM(10, "|TInterface\\icons\\INV_Hammer_24:40:40:-18|t Repair Items", GOSSIP_SENDER_MAIN, 6);							// Repair Items
@@ -40,7 +40,7 @@ public:
 						player->SetPower(POWER_MANA, player->GetMaxPower(POWER_MANA));
 
 				player->SetHealth(player->GetMaxHealth());
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFHP & MP succesfully restored!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFHP & MP successfully restored!");
 				player->CastSpell(player, 31726);
 				break;
 
@@ -54,7 +54,7 @@ public:
                         InstanceSave* save = itr->second.save;
                         if (itr->first != player->GetMapId())
                         {
-                            uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
+                           // uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
                            // uint32 ttr = (resetTime >= time(nullptr) ? resetTime - time(nullptr) : 0);
                             sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUIDLow(), itr->first, Difficulty(i), true, player);
                             itr = m_boundInstances.begin();
@@ -64,7 +64,7 @@ public:
                     }
 				}
 
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFInstances succesfully reseted!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFInstances successfully reset!");
 				player->CastSpell(player, 59908);
                 return true;
 				break;
@@ -79,14 +79,14 @@ public:
 				}
 
 				player->RemoveAllSpellCooldown();
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFCooldowns succesfully reseted!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFCooldowns successfully reseted!");
 				player->CastSpell(player, 31726);
 				break;
 
 		case 4: // Leave Combat
 				player->CLOSE_GOSSIP_MENU();
 				player->CombatStop();
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFCombat succesfully removed!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFCombat successfully removed!");
 				player->CastSpell(player, 31726);
 				break;
 
@@ -94,14 +94,14 @@ public:
 				player->CLOSE_GOSSIP_MENU();
 				if(player->HasAura(15007))
 				player->RemoveAura(15007);
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFSickness succesfully removed!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFSickness successfully removed!");
 				player->CastSpell(player, 31726);
 				break;
 
 		case 6: // Repair Items
 				player->CLOSE_GOSSIP_MENU();
 				player->DurabilityRepairAll(false, 0, false);
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFItems repaired succesfully!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFItems repaired successfully!");
 				player->CastSpell(player, 31726);
 				break;
 
@@ -109,7 +109,7 @@ public:
 				player->CLOSE_GOSSIP_MENU();
 				player->resetTalents(true);
 				player->SendTalentsInfoData(false);
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFTalents reseted succesfully!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFTalents reseted successfully!");
 				player->CastSpell(player, 31726);
 				break;
 				
@@ -134,7 +134,7 @@ public:
 
 				player->CastSpell(player, 63624);
 				player->CastSpell(player, 63680);
-				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFDual Talents Learned Succesfully!");
+				player->GetSession()->SendNotification("|cffFFFF00NPC SERVICES \n |cffFFFFFFDual Talents Learned Successfully!");
 				return true;
 				break;
 
