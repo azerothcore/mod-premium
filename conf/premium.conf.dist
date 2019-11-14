@@ -56,6 +56,12 @@ Vendor = 1
 #                     0  - (Disabled)
 MailBox = 1
 
+#    Premium Services NPC Poszer
+#        Description: Allow Players Access ingame Mail
+#        Default:     1  - (Enabled)
+#                     0  - (Disabled)        
+Services = 1
+
 ##################################################################################################################
 #   Premium.NpcDuration
 #       Description: Time (in seconds) before despawn of summoned NPC
