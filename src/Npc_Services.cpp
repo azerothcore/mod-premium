@@ -56,7 +56,6 @@ public:
                         InstanceSave* save = itr->second.save;
                         if (itr->first != player->GetMapId())
                         {
-                            uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
                             sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUIDLow(), itr->first, Difficulty(i), true, player);
                             itr = m_boundInstances.begin();
                         }
@@ -118,12 +117,6 @@ public:
 				player->CLOSE_GOSSIP_MENU();
 				player->GetSession()->SendShowBank(player->GetGUID());
 				break;
-				
-/*	    case 9: // MAIL
-				player->CLOSE_GOSSIP_MENU();
-				player->GetSession()->SendShowMailBox(player->GetGUID());
-				break;
-*/
 		case 10: // Learn Dual Talent Specialization
 				player->CLOSE_GOSSIP_MENU();
 				if (player->IsInCombat())
