@@ -1,8 +1,5 @@
--- ----------------------------
--- Table structure for premium
--- ----------------------------
-DROP TABLE IF EXISTS `premium`;
-CREATE TABLE `premium` (
-  `AccountId` int(11) unsigned NOT NULL,
-  `active` int(11) unsigned NOT NULL default '1'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `mod_premium`;
+CREATE TABLE `mod_premium` (
+  `account_id` int(11) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

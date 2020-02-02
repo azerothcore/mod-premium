@@ -37,7 +37,7 @@ enum Trainers
     ROGUE_H     = 3401,
     SHAMAN_H    = 3344,
     WARLOCK_H   = 3324,
-    WARRIOR_H   = 3354, 
+    WARRIOR_H   = 3354,
 
     DEATHKNIGHT_AH  = 28472
 };
@@ -63,10 +63,10 @@ public:
 
     bool OnUse(Player* player, Item* item, SpellCastTargets const& /*targets*/) override
     {
-        if (!sConfigMgr->GetBoolDefault("PremiumAccount", true)) 
-            return false;  
+        if (!sConfigMgr->GetBoolDefault("PremiumAccount", true))
+            return false;
 
-        QueryResult result = CharacterDatabase.PQuery("SELECT AccountId FROM premium WHERE active = 1 AND AccountId = %u", player->GetSession()->GetAccountId());
+        QueryResult result = CharacterDatabase.PQuery("SELECT `account_id` FROM `mod_premium` WHERE `active` = 1 AND `account_id` = %u", player->GetSession()->GetAccountId());
 
         if (!result)
             return false;
@@ -277,9 +277,9 @@ public:
                 case 4: player->SetDisplayId(10137); break;     // Human Male                   'Orb of Deception'
                 case 5: player->SetDisplayId(10138); break;     // Human Female                 'Orb of Deception'
                 case 6: player->SetDisplayId(10139); break;     // Orc Male                     'Orb of Deception'
-                case 7: player->SetDisplayId(10140); break;     // Orc Female                   'Orb of Deception' 
+                case 7: player->SetDisplayId(10140); break;     // Orc Female                   'Orb of Deception'
                 case 8: player->SetDisplayId(10141); break;     // Dwarf Male                   'Orb of Deception'
-                case 9: player->SetDisplayId(10142); break;     // Dwarf Female                 'Orb of Deception' 
+                case 9: player->SetDisplayId(10142); break;     // Dwarf Female                 'Orb of Deception'
                 case 10: player->SetDisplayId(10143); break;    // NightElf Male                'Orb of Deception'
                 case 11: player->SetDisplayId(10144); break;    // NightElf Female              'Orb of Deception'
                 case 12: player->SetDisplayId(10145); break;    // Undead Female                'Orb of Deception'
@@ -331,16 +331,16 @@ public:
 
     void OnBeforeConfigLoad(bool reload) override
     {
-        if (!reload) 
+        if (!reload)
         {
             std::string conf_path = _CONF_DIR;
-            std::string cfg_file = conf_path + "/premium.conf";            
-            
+            std::string cfg_file = conf_path + "/premium.conf";
+
 #if PLATFORM == PLATFORM_WINDOWS
             cfg_file = "premium.conf";
 #endif
             std::string cfg_def_file = cfg_file + ".dist";
-            
+
             // Load .conf.dist config
             if (!sConfigMgr->LoadMore(cfg_def_file.c_str()))
             {
@@ -350,7 +350,7 @@ public:
                 sLog->outError("Module config: Use default settings!");
                 sLog->outString();
             }
-            
+
             // Load .conf config
             if (!sConfigMgr->LoadMore(cfg_file.c_str()))
             {
