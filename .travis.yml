@@ -1,6 +1,5 @@
 sudo: required
-dist: xenial # (16.04)
-# bionic (18.04) is not yet available in travis
+dist: bionic # (18.04)
 
 language: cpp
 
@@ -27,6 +26,7 @@ jobs:
       before_install:
         - cd ..
         - git clone --depth=1 --branch=master https://github.com/azerothcore/azerothcore-wotlk.git azerothcore-wotlk
+        - mv "$TRAVIS_BUILD_DIR" azerothcore-wotlk/modules
         - cd azerothcore-wotlk
         - source ./apps/ci/ci-before_install.sh
       install:
@@ -45,7 +45,6 @@ jobs:
       install:
         - source ./apps/ci/ci-install.sh ON
         - source ./apps/ci/ci-import-db.sh
-        - mysql -u root world_$DB_RND_NAME <modules/$(basename "$TRAVIS_BUILD_DIR")/sql/example_item_9017.sql
       script:
         - source ./apps/ci/ci-compile.sh
         - source ./apps/ci/ci-worldserver-dry-run.sh
@@ -55,6 +54,7 @@ jobs:
       before_install:
         - cd ..
         - git clone --depth=1 --branch=master https://github.com/azerothcore/azerothcore-wotlk.git azerothcore-wotlk
+        - mv "$TRAVIS_BUILD_DIR" azerothcore-wotlk/modules
         - cd azerothcore-wotlk
         - source ./apps/ci/ci-before_install.sh
       install:
