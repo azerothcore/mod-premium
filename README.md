@@ -1,7 +1,10 @@
 # ![logo](https://raw.githubusercontent.com/azerothcore/azerothcore.github.io/master/images/logo-github.png) AzerothCore
+
 ## Premium Account
 
-- Latest Premium Account build status with azerothcore: [![Build Status](https://github.com/azerothcore/mod-premium/workflows/core-build/badge.svg?branch=master&event=push)](https://github.com/azerothcore/mod-premium)
+- Latest Premium Account build status with azerothcore:
+
+[![Build Status](https://github.com/azerothcore/mod-premium/workflows/core-build/badge.svg?branch=master&event=push)](https://github.com/azerothcore/mod-premium)
 
 This is a module for [AzerothCore](http://www.azerothcore.org) that adds Premium account features to players.
 
@@ -52,10 +55,8 @@ assign the script to an item such as hearthstone using the script name 'premium_
 
 If you need to change the module configuration, go to your server configuration folder (e.g. **etc**), copy `premium.conf.dist` to `premium.conf` and edit it as you prefer.
 
-
 ## Test the module
 
 There is a SQL query so you can create an item and test it quickly.
 
 ![item screenshot](/screenshots/item.png?raw=true "item screenshot")
-
