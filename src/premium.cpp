@@ -56,6 +56,22 @@ enum Mounts
     DRAENEI_MOUNT   = 34406
 };
 
+enum PremiumGossip
+{
+    PREMIUM_MENU = 62001,
+    PREMIUM_MENU_TEXT = 90003,
+    GOSSIP_MORPH = 0,
+    GOSSIP_DEMORPH,
+    GOSSIP_MOUNT,
+    GOSSIP_TRAIN_ME,
+    GOSSIP_PLAYER,
+    GOSSIP_VENDOR,
+    GOSSIP_MAIL,
+    GOSSIP_BANK,
+    GOSSIP_AUCTION_HOUSE,
+    GOSSIP_FACTION
+};
+
 class premium_account : public ItemScript
 {
 public:
@@ -66,7 +82,7 @@ public:
         if (!sConfigMgr->GetOption<bool>("PremiumAccount", true))
             return false;
 
-        QueryResult result = CharacterDatabase.Query("SELECT AccountId FROM premium WHERE active = 1 AND AccountId = {}", player->GetSession()->GetAccountId());
+        QueryResult result = CharacterDatabase.Query("SELECT `AccountId` FROM `premium` WHERE `active`=1 AND `AccountId`={}", player->GetSession()->GetAccountId());
 
         if (!result)
             return false;
@@ -75,6 +91,7 @@ public:
             return false;
 
         float rangeCheck = 10.0f;
+
         if (player->FindNearestCreature(NPC_AUCTION_A, rangeCheck) ||
             player->FindNearestCreature(NPC_AUCTION_H, rangeCheck) ||
             player->FindNearestCreature(NPC_VENDOR_A, rangeCheck) ||
@@ -104,21 +121,20 @@ public:
 
         if (sConfigMgr->GetOption<bool>("Morph", true))
         {
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Morph", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Demorph", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_MORPH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_DEMORPH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
         }
 
         if (sConfigMgr->GetOption<bool>("Mount", true))
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT_16, "Mount", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+            AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_MOUNT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
 
         if (sConfigMgr->GetOption<bool>("Trainers", true))
-            AddGossipItemFor(player, GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+            AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_TRAIN_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
 
         if (sConfigMgr->GetOption<bool>("PlayerInteraction", true))
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Player interactions", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+            AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_PLAYER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
 
-        SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, item->GetGUID());
-
+        SendGossipMenuFor(player, PREMIUM_MENU_TEXT, item->GetGUID());
         return false; // Cast the spell on use normally
     }
 
@@ -152,11 +168,34 @@ public:
             {
                 uint32 vendorId = 0;
                 std::string salute;
+
                 if (player->GetTeamId() == TEAM_ALLIANCE)
                 {
                     vendorId = NPC_VENDOR_A;
-                    salute = "Greetings";
-                } else {
+                    switch (player->GetSession()->GetSessionDbLocaleIndex())
+                    {
+                    case LOCALE_enUS:
+                    case LOCALE_koKR:
+                    case LOCALE_frFR:
+                    case LOCALE_deDE:
+                    case LOCALE_zhCN:
+                    case LOCALE_zhTW:
+                    case LOCALE_ruRU:
+                    {
+                        salute = "Greetings";
+                        break;
+                    }
+                    case LOCALE_esES:
+                    case LOCALE_esMX:
+                    {
+                        salute = "Saludos.";
+                    }
+                    default:
+                        break;
+                    }
+                }
+                else
+                {
                     vendorId = NPC_VENDOR_H;
                     salute = "Zug zug";
                 }
@@ -186,16 +225,56 @@ public:
             case GOSSIP_ACTION_INFO_DEF + 7: /*Auction House*/
             {
                 uint32 auctionId = 0;
-                std::string salute;
+                std::string salute = "";
                 if (player->GetTeamId() == TEAM_HORDE)
                 {
                     auctionId = NPC_AUCTION_H;
-                    salute = "I will go shortly, I need to get back to Orgrimmar";
+                    switch (player->GetSession()->GetSessionDbLocaleIndex())
+                    {
+                    case LOCALE_enUS:
+                    case LOCALE_koKR:
+                    case LOCALE_frFR:
+                    case LOCALE_deDE:
+                    case LOCALE_zhCN:
+                    case LOCALE_zhTW:
+                    case LOCALE_ruRU:
+                    {
+                        salute = "I will go shortly, I need to get back to Orgrimmar";
+                        break;
+                    }
+                    case LOCALE_esES:
+                    case LOCALE_esMX:
+                    {
+                        salute = "Me iré en breve, necesito volver a Orgrimmar.";
+                    }
+                    default:
+                        break;
+                    }
                 }
                 else
                 {
                     auctionId = NPC_AUCTION_A;
-                    salute = "I will go shortly, I need to get back to Stormwind City";
+                    switch (player->GetSession()->GetSessionDbLocaleIndex())
+                    {
+                    case LOCALE_enUS:
+                    case LOCALE_koKR:
+                    case LOCALE_frFR:
+                    case LOCALE_deDE:
+                    case LOCALE_zhCN:
+                    case LOCALE_zhTW:
+                    case LOCALE_ruRU:
+                    {
+                        salute = "I will go shortly, I need to get back to Stormwind City";
+                        break;
+                    }
+                    case LOCALE_esES:
+                    case LOCALE_esMX:
+                    {
+                        salute = "Me iré en breve, necesito volver a la Ciudad de Ventormenta.";
+                    }
+                    default:
+                        break;
+                    }
                 }
 
                 SummonTempNPC(player, auctionId, salute.c_str());
@@ -248,18 +327,18 @@ public:
                 ClearGossipMenuFor(player);
 
                 if (sConfigMgr->GetOption<bool>("Vendor", true))
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Vendor", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                    AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_VENDOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
 
                 if (sConfigMgr->GetOption<bool>("MailBox", true))
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Mail Box", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                    AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_MAIL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
 
                 if (sConfigMgr->GetOption<bool>("Bank", true))
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Show Bank", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_BANK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
                 if (sConfigMgr->GetOption<bool>("Auction", true))
-                    AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Auction House", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+                    AddGossipItemFor(player, PREMIUM_MENU, GOSSIP_AUCTION_HOUSE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
 
-                SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, item->GetGUID());
+                SendGossipMenuFor(player, PREMIUM_MENU_TEXT, item->GetGUID());
                 break;
             }
         }
